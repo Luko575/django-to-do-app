@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container pt-3">
+    <h4>Tasks</h4>
+    <form method="POST" action="{% url 'add' %}" enctype="multipart/form-data" class="w-100 d-flex pb-3">
+        {% csrf_token %}
+        {{ form }}
+        <button class="btn btn-outline-success">Add</button>
+    </form>
+
+    <table class="justify-content-center" id="table_tasks">
+        <tbody>
+            {% for item in tasks %}
+            <tr>
+                <td class="w-100">
+                    {% if item.is_completed %}
+                    <a class="btn btn-light w-100 text-left text-justify text-break" id="completed_{{item.pk}}" href="{% url 'update' item.pk %}?action=is_completed"><del>{{ item.title }}</del></a>
+                    {% else %}
+                    <a class="btn btn-outline-secondary w-100 text-left text-justify text-break" id="completed_{{item.pk}}" href="{% url 'update' item.pk %}?action=is_completed">{{ item.title }}</a>
+                    {% endif %}
+                </td>
+                <td>
+                    <a class="btn btn-outline-warning" id="edit_{{item.pk}}" data-bs-toggle="modal" data-bs-target="#modal_{{item.pk}}">Edit</a>
+                </td>
+                <div class="modal fade" id="modal_{{item.pk}}" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <form method="POST" action="{% url 'update' item.pk %}" enctype="multipart/form-data" class="w-100 d-flex ps-3">
+                                    {% csrf_token %}
+                                    <label class="col-form-label" id="label_{{ item.pk }}">Current title: {{ item.title }}</label>
+                                    {{ form.as_p }}
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button class="btn btn-outline-success">Update</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <td>
+                    <a class="btn btn-outline-danger" id="delete_{{item.pk}}" href="{% url 'update' item.pk %}?action=is_deleted">Delete</a>
+                </td>
+                <td>
+                    <a class="btn btn-outline-primary" id="archive_{{item.pk}}" href="{% url 'update' item.pk %}?action=is_archived">Archive</a>
+                </td>
+            </tr>
+            {% empty %}
+            <div class="d-flex m-3">
+                <p>0 tasks</p>
+            </div>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

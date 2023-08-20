@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container pt-3">
+    <h4>Archived</h4>
+    <table class="justify-content-center" id="table_archived">
+        <tbody>
+            {% for item in tasks_archived %}
+            <tr>
+                <td class="w-100">
+                    {% if item.is_completed %}
+                    <a class="btn btn-light w-100 text-left text-justify text-break" id="completed_{{item.pk}}" href="{% url 'update' item.pk %}?action=is_completed"><del>{{ item.title }}</del></a>
+                    {% else %}
+                    <a class="btn btn-outline-secondary w-100 text-left text-justify text-break" id="completed_{{item.pk}}" href="{% url 'update' item.pk %}?action=is_completed">{{ item.title }}</a>
+                    {% endif %}
+                </td>
+                <td>
+                    <a class="btn btn-outline-danger" id="delete_{{item.pk}}" href="{% url 'update' item.pk %}?action=is_deleted">Delete</a>
+                </td>
+                <td>
+                    <a class="btn btn-outline-info" id="archive_{{item.pk}}" href="{% url 'update' item.pk %}?action=is_archived">Restore</a>
+                </td>
+            </tr>
+            {% empty %}
+            <div class="d-flex m-3">
+                <p>0 tasks</p>
+            </div>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
